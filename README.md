@@ -14,4 +14,6 @@ A lightweight desktop app built with PyQt6 for managing, creating, and editing M
 
 *  Auto-generates all necessary directories (`langs`, `themes`, `templates`) and default files if they are missing.
 
+---
+
 Copyright (C) 2026  Fligma
