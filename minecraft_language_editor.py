@@ -11,6 +11,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont, QCloseEvent, QColor
 
 # flyonisis (2026)
+# Copyright (C) 2026  Fligma
 script_path = os.path.dirname(os.path.abspath(__file__))
 
 DEFAULT_THEME = {
@@ -209,6 +210,7 @@ def get_template_path():
     path = config.get('Preferences', 'TemplatePath', fallback='templates')
     return path if os.path.isabs(path) else os.path.join(script_path, path)
 
+
 class ThemeEditorWidget(QWidget):
     def __init__(self, parent_app):
         super().__init__()
@@ -322,7 +324,6 @@ class ThemeEditorWidget(QWidget):
             self.parent_app.apply_theme(clean_name)
             self.parent_app.show_menu()
 
-
 class SettingsWidget(QWidget):
     def __init__(self, parent_app):
         super().__init__()
@@ -423,7 +424,6 @@ class SettingsWidget(QWidget):
         
         QMessageBox.information(self, "Settings", "Settings applied and saved successfully!")
         self.parent_app.show_menu()
-
 
 class MainMenuWidget(QWidget):
     def __init__(self, parent_app):
