@@ -12,7 +12,13 @@ from PyQt6.QtGui import QFont, QCloseEvent, QColor
 
 # flyonisis (2026)
 # Copyright (C) 2026  Fligma
-script_path = os.path.dirname(os.path.abspath(__file__))
+
+if getattr(sys, 'frozen', False):
+    # Running as a compiled .exe or binary
+    script_path = os.path.dirname(sys.executable)
+else:
+    # Running as a normal .py script
+    script_path = os.path.dirname(os.path.abspath(__file__))
 
 DEFAULT_THEME = {
     "name": "DarkSheets",
