@@ -8,7 +8,7 @@ A lightweight desktop app built with PyQt6 for managing, creating, and editing M
 
 * **Template System:** Use existing files (json) as blueprints to start translating new languages quickly.
 
-* **Custom Theme Maker:** Comes with a built-in visual theme editor. Create your own color schemes, save them as `.json`, and apply them on the fly. Defaults to a "DarkSheets" theme.
+* **Custom Theme Maker:** Comes with a built-in visual theme editor. Create your own color schemes, saves them as `.json` in `/templates`, and apply them on the fly. Defaults to a "DarkSheets" theme.
 
 * **Safe Editing:** Warns you if you try to close the app without saving your changes.
 
