@@ -1,0 +1,68 @@
+name: Build macOS app
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write          # needed to publish a Release
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-13      # Intel (x86_64)
+            arch: intel
+          - runner: macos-14      # Apple Silicon (arm64)
+            arch: applesilicon
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Syntax check
+        run: python -m compileall minecraft_language_editor.py
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller PyQt6
+      - name: Build .app
+        run: pyinstaller --noconfirm --onefile --windowed --name "MinecraftLangEditor" minecraft_language_editor.py
+
+      - name: Zip the app (preserve symlinks)
+        run: |
+          cd dist
+          zip -r -y "MinecraftLangEditor-${{ matrix.arch }}.zip" "MinecraftLangEditor.app"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MinecraftLangEditor-${{ matrix.arch }}
+          path: dist/MinecraftLangEditor-${{ matrix.arch }}.zip
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Publish Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          files=$(find artifacts -name '*.zip')
+          echo "Releasing: $files"
+          gh release create "mac-build-${{ github.run_number }}" $files \
+            --repo "${{ github.repository }}" \
+            --title "Minecraft Lang Editor — macOS (build ${{ github.run_number }})" \
+            --notes "Unsigned macOS build. Download the zip matching the Mac's chip:
+          - **Apple Silicon** (M1/M2/M3): \`MinecraftLangEditor-applesilicon.zip\`
+          - **Intel**: \`MinecraftLangEditor-intel.zip\`
+          First launch: **right-click the app -> Open -> Open** (it's unsigned)."
